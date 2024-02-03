@@ -42,11 +42,9 @@ Hoewever, instead of directly dealing damage, it leverages the ```parentGroup```
 in conjunction with the ```-->``` syntax sugar to look up another object within that group by it's ```internalname```.
 This is to avoid namespace collisions, as giving objects normal names creates an entire namespace to hook against for direct-commands, so those must be unique. ```internalname```s do not.
 
-Having found the internalname of ```vis``` we then trigger the ```trapData::setActive(%this, %obj, %activate)``` command
+2) Having found the internalname of ```vis``` we then trigger the ```trapData::setActive(%this, %obj, %activate)``` command. We runtime add ```%obj.activeState``` to track if that specific object has been activated or not and play a ```Trip``` via the ```PlayThread``` command animation if the state is true
 
-2) We runtime add ```%obj.activeState``` to track if that specific object has been activated or not and play a ```Trip``` via the ```PlayThread``` command animation if the state is true
-
-3) Any ```Shapebase derivitive```, having completed a non-looping animation triggered by ```PlayThread``` executes a ```onEndSequence(%this, %obj, %slot, %name)``` command at the datablock namespace level.
+3) Any ```Shapebase```` derivitive, having completed a non-looping animation triggered by ```PlayThread``` executes a ```onEndSequence(%this, %obj, %slot, %name)``` command at the datablock namespace level.
 Here we leverage that to create a general hook based on the animation used to create a call (if it is defined) of, in this case, ```onTrip```
 
 4) The animation having been completed, ```trapData::onTrip(%this,%obj)``` is then triggered, and we use the second ```damager``` triggers's ```getNumObjects()``` and ```getObject(%i)``` commands to apply damage to all objects within that,
