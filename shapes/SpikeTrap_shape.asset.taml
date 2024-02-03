@@ -1,0 +1,4 @@
+<ShapeAsset
+    AssetName="SpikeTrap_shape"
+    fileName="@assetFile=SpikeTrap.dae"
+    constuctorFileName="@assetFile=SpikeTrap.tscript"/>

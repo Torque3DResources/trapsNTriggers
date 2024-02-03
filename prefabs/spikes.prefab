@@ -1,0 +1,23 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+
+   new Trigger() {
+      polyhedron = "-1.0000000 1.0000000 0.0000000 1.0000000 0.0000000 0.0000000 0.0000000 -1.0000000 0.0000000 0.0000000 0.0000000 1.0000000";
+      dataBlock = "TrapDamager";
+      position = "-3.75 3.75 0";
+      scale = "2.5 2.5 7";
+      internalName = "damager";
+   };
+   new Trigger() {
+      polyhedron = "-1.0000000 1.0000000 0.0000000 1.0000000 0.0000000 0.0000000 0.0000000 -1.0000000 0.0000000 0.0000000 0.0000000 1.0000000";
+      dataBlock = "TrapTrigger";
+      scale = "10 10 20";
+      internalName = "activator";
+   };
+   new StaticShape() {
+      dataBlock = "SpikeTrap";
+      position = "-5 5 0";
+      internalName = "vis";
+   };
+};
+//--- OBJECT WRITE END ---
