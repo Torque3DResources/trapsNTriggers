@@ -77,3 +77,15 @@ Add a ```TrapTrigger```,a ```TrapDamager``` with an internalname of ```damager``
 2) for debris, a mesh containing origin centered submeshes of any amount
 3) for the explosion, a texture atlas using ```animTexTiling```, ```animTexFrames```, ```framesPerSec``` and ```animateTexture``` for the particle to be used (or standard particle emission)
 4) a ```RigidShapeData``` pointing at the new mesh with a ```destroyedLevel``` and apropriate ```mass```,```bodyFriction```, ```bodyRestitution``` for general physics as well as ```integration```, ```collisionTol```, and ```contactTol``` entries for physics subtick rate, and collision vs contact resolution speeds and distances, respectively 
+
+## Example 4) liquid submersion damage over time
+### Class used:
+Waterblock
+#### Callbacks:
+```function playerData::onEnterLiquid(%this, %obj, %coverage, %type)``` is, at time of writing, a player-specific callback (there are similar callbacks for other classes but no shared root)
+
+By specifying a ```liquidType = "Ick";``` entry in the waterblock, ```onEnterLiquid``` knows what type of liquid you submerged yourself in.
+
+We then use a ```schedule``` call to execute an infinitely repeating ```function playerData::takeDot(%this, %obj, %type, %damage)```, and use the ```cancel``` command to stop that cycle when you ```function playerData::onLeaveLiquid(%this, %obj, %type)```
+#### Variant authoring: 
+Specify a different ```liquidType```, and call ```%obj.getDatablock().schedule(1000, "takeDot", %obj, %type, 5);``` with different values if using that instead
