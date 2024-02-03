@@ -1,0 +1,103 @@
+function trapData::setActive(%this, %obj, %activate)
+{
+    if (%obj.activeState == %activate) return;
+    
+    if (%activate)
+    {
+        %obj.playAudio(0,%this.ambientSound);
+        %obj.playthread(0, "Trip");
+        %obj.activeState = true;
+    }
+    else
+    {
+        %obj.stopthread(0);        
+        %obj.activeState = false;
+    }
+}
+
+function trapData::onEndSequence(%this, %obj, %slot, %name)
+{
+   %script = "on" @ %name;
+   if(%this.isMethod(%script))
+      %this.call(%script, %obj);
+}
+
+function trapData::onTrip(%this,%obj)
+{
+    %damageTrigger = %obj.parentGroup-->damager;
+	%count = %damageTrigger.getNumObjects();	
+	%victimCount = 0;	
+	for (%i=0;%i<%count;%i++)
+	{
+		%victim = %damageTrigger.getObject(%i);
+        %damageMask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType;
+        if (%victim.getType() & %damageMask)
+		{
+			%victimCount++;
+		}
+	}	
+	if (%victimCount>0)
+	{
+		for (%i=0;%i<%count;%i++)
+		{
+			%victim = %damageTrigger.getObject(%i);
+            %damageMask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType;
+			if (%victim.getType() & %damageMask)
+			{
+                %victim.damage(%damageTrigger, %damageTrigger.position, %this.TriggerDamage, "trap");
+			}
+		}
+	}
+    %obj.playthread(0, "TripDone");
+}
+
+function trapData::onTripDone(%this,%obj)
+{
+    %obj.activeState = false;
+}
+
+function TrapTriggerData::onTickTrigger(%this,%trigger)
+{	
+	%count = %trigger.getNumObjects();	
+	%victimCount = 0;
+	
+	for (%i=0;%i<%count;%i++)
+	{
+		%victim = %trigger.getObject(%i);
+        %damageMask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType;
+	    if (%victim.getType() & %damageMask)
+		{
+			%victimCount++;
+		}
+	}
+	%visobject = %trigger.parentGroup-->vis;
+    %visobject.getDatablock().setActive(%visobject,(%victimCount>0));
+}
+
+function EnvironmentalDamager::onTickTrigger(%this,%trigger)
+{	
+	%count = %trigger.getNumObjects();	
+	%victimCount = 0;
+	
+	for (%i=0;%i<%count;%i++)
+	{
+		%victim = %trigger.getObject(%i);
+		if (%victim.getType() &$TypeMasks::PlayerObjectType)
+		{
+			%victimCount++;
+		}
+	}
+	
+	if (%victimCount>0)
+	{
+		for (%i=0;%i<%count;%i++)
+		{
+			%victim = %trigger.getObject(%i);
+            %damageMask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType;
+			if (%victim.getType() & %damageMask)
+			{
+                %victim.damage(%trigger, %trigger.position, %this.TriggerDamage, "environmmental");
+			}
+		}
+	}
+}

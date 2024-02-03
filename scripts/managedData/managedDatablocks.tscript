@@ -1,0 +1,28 @@
+datablock StaticShapeData(SpikeTrap)
+{
+   classname = "TrapData";
+   ShapeAsset = "trapsNTriggers:SpikeTrap_shape";
+   cameraMaxDist = "1";
+   originalAssetName = "SpikeTrap";
+   AssetType = "Datablock";
+   vis = "trapsNTriggers:SpikeTrap_shape";
+   TriggerDamage = 10;
+};
+
+datablock TriggerData(TrapTrigger)
+{
+   classname = "TrapTriggerData";
+   tickPeriodMS = 100;
+};
+
+datablock TriggerData(TrapDamager)
+{
+   classname = "TrapDamagerData";
+   tickPeriodMS = 100;
+};
+
+datablock TriggerData(EnvironmentalDamager)
+{
+   tickPeriodMS = 500;
+   TriggerDamage = 5;
+};

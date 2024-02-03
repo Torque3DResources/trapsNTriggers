@@ -1,0 +1,20 @@
+
+singleton TSShapeConstructor(SpikeTrapdae)
+{
+   baseShapeAsset = "trapsNTriggers:SpikeTrap_shape";
+   singleDetailSize = "0";
+   neverImportMat = "DefaultMaterial	ColorEffect*";
+   flipUVCoords = "0";
+   joinIdenticalVerts = "0";
+   reverseWindingOrder = "0";
+   removeRedundantMats = "0";
+   animFPS = "2";
+};
+
+function SpikeTrapdae::onLoad(%this)
+{
+   %this.addSequence("ambient", "Trip", "0", "5", "1", "0");
+   %this.setSequenceCyclic("Trip", "0");
+   %this.addSequence("ambient", "TripDone", "5", "20", "1", "0");
+   %this.setSequenceCyclic("TripDone", "0");
+}
