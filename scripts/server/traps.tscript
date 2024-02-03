@@ -147,7 +147,7 @@ function trapData::onTripDone(%this,%obj)
 // ============================================================================== 
 function boomBarrel::damage(%this, %obj, %sourceObject, %position, %damage, %damageType)
 {
-   if (!isObject(%obj) || !%damage)
+   if ((!isObject(%obj) || !%damage) || %obj.getDamageState() !$= "Enabled")
       return;
 
    //note that if an objet has an animation labeled "damage"
@@ -174,8 +174,20 @@ function boomBarrel::damage(%this, %obj, %sourceObject, %position, %damage, %dam
         //radiusDamage(%sourceObject, %position, %radius, %damage, %damageType, %impulse)
         %obj.setDamageState("Destroyed");
         radiusDamage(%obj, %obj.position, 10, 50, "explosion", 1000);
-        %obj.delete();
+        %obj.schedule(32, "delete");
    }
+}
+
+function boomBarrel::onImpact(%this, %obj, %collObj, %vec, %len )
+{
+   if ((!isObject(%obj) || %obj.getDamageState() !$= "Enabled"))
+      return;
+      
+    //echo(%this SPC %obj SPC %collObj SPC %vec SPC %len );
+    %dmgPos = VectorAdd(%obj.getPosition(), %vec);
+    %dmgAmt = getMin(%len/%this.minImpactSpeed, %this.mass/%this.maxDamage);
+
+    %this.damage(%obj, %collObj, %dmgPos, %dmgAmt, "impact");
 }
 
 // ============================================================================== 
