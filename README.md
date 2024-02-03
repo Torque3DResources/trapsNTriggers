@@ -52,3 +52,28 @@ Here we leverage that to create a general hook based on the animation used to cr
 #### Variant authoring:
 Add a model with a ```Trip``` and ```TripDone``` animation, as well as a collision mesh.
 Add a ```TrapTrigger```,a ```TrapDamager``` with an internalname of ```damager```, and a ```StaticShape``` referencing a ```StaticShapeData``` pointing to said model with an ```internalname``` of ```vis``` and bake it to a prefab.
+
+## Example 3) damaging and destoying an explosive barrel
+### Datablock Object Types and Definitions:
+```datablock DebrisData( barrelDebris )```
+
+```datablock ExplosionData(BarrelExplosion)```
+
+```datablock RigidShapeData(boomBarrel)```
+
+```boomBarrel``` references the other two via ```debris = barrelDebris;``` and ```explosion = BarrelExplosion;``` respectively
+#### Callbacks:
+```function boomBarrel::damage(%this, %obj, %sourceObject, %position, %damage, %damageType)``` leverages the following:
+
+```%obj.applyDamage(%damage);``` calls in to source side to look up the cumulative damage that object instance has taken, and lerps an explicitly named ```damage``` animation to blend the visual result based totalDamage/```destroyedLevel```
+
+```%obj.applyImpulse``` is used in conjunction with a normalized vector of where the object's collision mesh was struck, in combination with a scalar based on the amount of damage that was sent that hit that specific object, as a percentage of the ```maxDamage``` value stored off in the referenced datablock shared by all instances to move the rigidshape so that harder hits move the barels further
+
+```getDamageState()``` and ```%obj.setDamageState("Destroyed");``` are used to ensure that when this object blows up, it does not infinitely damage itself causing it to re-```blowup()```.
+
+```%obj.blowUp();``` references the referenced datablocks ```debris``` and ```explosion``` to spew debris meshes and (in the provided configuration) 1 animated particle, respectively
+#### Variant authoring:
+1) for the thing to destroy, a model with a colMesh-1 submesh, and (optionally) an animation sequence that can be tied to a ```damage``` animation
+2) for debris, a mesh containing origin centered submeshes of any amount
+3) for the explosion, a texture atlas using ```animTexTiling```, ```animTexFrames```, ```framesPerSec``` and ```animateTexture``` for the particle to be used (or standard particle emission)
+4) a ```RigidShapeData``` pointing at the new mesh with a ```destroyedLevel``` and apropriate ```mass```,```bodyFriction```, ```bodyRestitution``` for general physics as well as ```integration```, ```collisionTol```, and ```contactTol``` entries for physics subtick rate, and collision vs contact resolution speeds and distances, respectively 
