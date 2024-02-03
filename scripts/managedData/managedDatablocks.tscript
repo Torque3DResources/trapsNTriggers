@@ -101,4 +101,5 @@ datablock RigidShapeData(boomBarrel)
    DebrisShapeAsset = "trapsNTriggers:barrelDebris_shape";
    debris = barrelDebris;
    explosion = BarrelExplosion;
+   minImpactSpeed = "0.25";
 };
