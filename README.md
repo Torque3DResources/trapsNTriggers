@@ -18,7 +18,7 @@ None. These are all prefabricated drop in examples
 #####  Visual
 ```ParticleEmitterNode```
 
-```VolumetricFog````
+```VolumetricFog```
 #### Callbacks: 
 Uses an ```EnvironmentalDamager::onTickTrigger``` call to see if it should damage an object within 
 #### Variant authoring:
