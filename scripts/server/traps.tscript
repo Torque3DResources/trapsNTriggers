@@ -116,6 +116,10 @@ function trapData::onTrip(%this,%obj)
 		}
 	}
     
+    %xform = %damageTrigger.getTransform();
+    %pos = getWords(%xform,0,2);          
+    %vec  = getWords(%xform,3,5);
+    
     //if we've caught a valid damageable object within the smaller trigger
 	if (%victimCount>0)
 	{
@@ -124,9 +128,13 @@ function trapData::onTrip(%this,%obj)
 			%victim = %damageTrigger.getObject(%i);
             %damageMask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType;
 			if (%victim.getType() & %damageMask)
-			{
+			{                
                 //hurt them
                 %victim.damage(%damageTrigger, %damageTrigger.position, %this.TriggerDamage, "trap");
+                if (%victim.getType() & $TypeMasks::VehicleObjectType)
+                {
+                    %victim.applyImpulse(%pos, vectorScale(%vec,%victim.getDatablock().mass*2));
+                }
 			}
 		}
 	}
@@ -186,8 +194,9 @@ function boomBarrel::onImpact(%this, %obj, %collObj, %vec, %len )
     //echo(%this SPC %obj SPC %collObj SPC %vec SPC %len );
     %dmgPos = VectorAdd(%obj.getPosition(), %vec);
     %dmgAmt = getMin(%len/%this.minImpactSpeed, %this.mass/%this.maxDamage);
-
-    %this.damage(%obj, %collObj, %dmgPos, %dmgAmt, "impact");
+    
+    if (%dmgAmt>2)
+        %this.damage(%obj, %collObj, %dmgPos, %dmgAmt, "impact");
 }
 
 // ============================================================================== 
