@@ -170,7 +170,7 @@ function boomBarrel::damage(%this, %obj, %sourceObject, %position, %damage, %dam
    
    //apply an impulse based on how much damage it took
    //and how much force it would take to move that much mass
-   %impulseVec = vectorMul(%impulseVec, (%damage / %this.maxDamage) * (%this.mass*32));
+   %impulseVec = vectorScale(%impulseVec, (%damage / %this.maxDamage) * (%this.mass*32));
    %obj.applyImpulse(%position,%impulseVec );
    
    //if we've taken more than the destroyed level, explode, then delete ourselves
